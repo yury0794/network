@@ -34,10 +34,9 @@ public class EchoClient2 {
 				System.out.print(">>");
 				scanner = new Scanner(System.in);
 				String message = scanner.nextLine();
-
 				pw.println(message);
-
 				String messageEcho = br.readLine();
+				
 				if (messageEcho == null) { // 서버가 연결을 끊음
 					System.out.println("[EchoClient] close by server");
 					break;
