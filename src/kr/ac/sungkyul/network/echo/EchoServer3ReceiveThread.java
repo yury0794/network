@@ -33,7 +33,7 @@ public class EchoServer3ReceiveThread extends Thread {
 				String data = br.readLine();
 				if (data == null) { // 클라이언트가 연결을 끊었다.(정상종료)
 					consoleLog("closed by client");
-					break;
+					return;
 				}
 
 				consoleLog("received :" + data);
