@@ -1,4 +1,4 @@
-package kr.ac.sungkyul.network.echo;
+package kr.ac.sungkyul.network.chat;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,60 +7,60 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.Scanner;
 
-public class EchoClient2 {
+public class ChatClient {
 	private static final String SERVER_IP = "220.67.115.226";
 	private static final int SERVER_PORT = 1000;
 
 	public static void main(String[] args) {
-		Socket socket = null;
 		Scanner scanner = null;
+		Socket socket = null;
 
 		try {
-
-			// 키보드 연결
+			// 1. 키보드 연결
 			scanner = new Scanner(System.in);
 
-			// 소켓 생성
+			// 2. socket 생성
 			socket = new Socket();
 
-			// 서버연결
+			// 3. 서버 연결
 			InetSocketAddress serverSocketAddress = new InetSocketAddress(SERVER_IP, SERVER_PORT);
 			socket.connect(serverSocketAddress);
 
-			// IOStream 받아오기
+			// 4. reader/writer 생성
 			BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
 			PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf-8"), true);
 
+			// 5. join 프로토콜
+			System.out.print("닉네임>>");
+			String nickname = scanner.nextLine();
+			pw.println("join:" + nickname);
+			pw.flush();
+			String ack = br.readLine();
+
+			// 6. ChatClientReceiveThread 시작
+			new ChatClientReceiveThread(br).start();
+
+			// 7. 키보드 입력 처리
 			while (true) {
-				// 메세지 입력
-				System.out.print(">>");
-				String message = scanner.nextLine();
+				String input = scanner.nextLine();
 
-				if ("exit".equals(message)) {
+				if ("quit".equals(input) == true) {
+					// 8. quit 프로토콜 처리
+					pw.println("quit");
+					pw.flush();
 					break;
+				} else {
+					// 9. 메시지 처리
+					pw.println("message:" + input);
+					pw.flush();
 				}
-
-				// 메세지 보내기
-				pw.println(message);
-
-				// 메세지 다시 받기
-				String messageEcho = br.readLine();
-				if (messageEcho == null) { // 서버가 연결을 끊음
-					System.out.println("[client] close by server");
-					break;
-				}
-
-				// 받은 메세지 출력
-				System.out.println("<<" + messageEcho);
 			}
-		} catch (SocketException e) {
-			System.out.println("[client] 비정상적으로 서버로 부터 연결이 끊어졌습니다." + e);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ex) {
+			System.out.println("error:" + ex);
 		} finally {
+			// 10. 자원정리
 			try {
 				// 소켓 닫기
 				if (socket != null && socket.isClosed() == false) {

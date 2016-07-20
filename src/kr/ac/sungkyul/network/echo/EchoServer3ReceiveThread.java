@@ -23,6 +23,7 @@ public class EchoServer3ReceiveThread extends Thread {
 		String remoteHostAddress = remoteAddress.getAddress().getHostAddress();
 		int remoteHostPort = remoteAddress.getPort();
 		consoleLog("연결성공-" + remoteHostAddress + ":" + remoteHostPort);
+		
 		try {
 			// 5. IOStream
 			BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
@@ -58,6 +59,6 @@ public class EchoServer3ReceiveThread extends Thread {
 	}
 	
 	private void consoleLog(String message){
-		System.out.println("[ehoc server thread#"+getId()+"] "+message);
+		System.out.println("[echo server thread#"+getId()+"] "+message);
 	}
 }

@@ -16,6 +16,7 @@ public class EchoServer3 {
 
 	public static void main(String[] args) {
 		ServerSocket serverSocket = null;
+		
 		try {
 			// 1. 서버 소켓 생성
 			serverSocket = new ServerSocket();
