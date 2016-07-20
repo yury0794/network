@@ -54,6 +54,7 @@ public class ChatServerTread extends Thread {
 					doMessage(tokens[1]);
 				} else if ("quit".equals(tokens[0])) {
 					doQuit(pw);
+					break;
 				} else {
 					System.out.println("에러:알수 없는 요청(" + tokens[0] + ")");
 				}
