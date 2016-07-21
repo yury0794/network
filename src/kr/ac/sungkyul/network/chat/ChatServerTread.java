@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -14,9 +13,9 @@ import java.util.List;
 public class ChatServerTread extends Thread {
 	private String nickname;
 	private Socket socket;
-	List<Writer> listWriters;
+	List<PrintWriter> listWriters;
 
-	public ChatServerTread(Socket socket, List<Writer> listWriters) {
+	public ChatServerTread(Socket socket, List<PrintWriter> listWriters) {
 		this.socket = socket;
 		this.listWriters = listWriters;
 	}
@@ -77,7 +76,7 @@ public class ChatServerTread extends Thread {
 		}
 	}
 
-	private void doJoin(String nickName, Writer writer) {
+	private void doJoin(String nickName, PrintWriter writer) {
 		this.nickname = nickName;
 
 		String data = nickName + "님이 참여하였습니다.";
@@ -92,14 +91,14 @@ public class ChatServerTread extends Thread {
 		pw.flush();
 	}
 
-	private void addWriter(Writer writer) {
+	private void addWriter(PrintWriter writer) {
 		synchronized (listWriters) {
 			listWriters.add(writer);
 		}
 	}
 
 	private void broadcast(String data) {
-		for (Writer writer : listWriters) {
+		for (PrintWriter writer : listWriters) {
 			PrintWriter printWriter = (PrintWriter) writer;
 			printWriter.println(data);
 			printWriter.flush();
@@ -108,22 +107,17 @@ public class ChatServerTread extends Thread {
 
 	private void doMessage(String message) {
 		String data = nickname + ":" + message;
-
-		for (Writer writer : listWriters) {
-			PrintWriter printWriter = (PrintWriter) writer;
-			printWriter.println(data);
-			printWriter.flush();
-		}
+		broadcast(data);
 	}
 
-	private void doQuit(Writer writer) {
+	private void doQuit(PrintWriter writer) {
 		removeWriter(writer);
 
 		String data = nickname + "님이 퇴장 하였습니다.";
 		broadcast(data);
 	}
 
-	private void removeWriter(Writer writer) {
+	private void removeWriter(PrintWriter writer) {
 		listWriters.remove(writer);
 	}
 }

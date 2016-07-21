@@ -1,7 +1,7 @@
 package kr.ac.sungkyul.network.chat;
 
 import java.io.IOException;
-import java.io.Writer;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -14,7 +14,7 @@ public class ChatServer {
 
 	public static void main(String[] args) {
 		ServerSocket serverSocket = null;
-		List<Writer> listWriters = new Vector<Writer>();
+		List<PrintWriter> listWriters = new Vector<PrintWriter>();
 
 		try {
 			// 1. 서버 소겟 생성

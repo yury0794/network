@@ -37,7 +37,6 @@ public class ChatClient {
 			String nickname = scanner.nextLine();
 			pw.println("join:" + nickname);
 			pw.flush();
-			String ack = br.readLine();
 
 			// 6. ChatClientReceiveThread 시작
 			new ChatClientReceiveThread(br).start();

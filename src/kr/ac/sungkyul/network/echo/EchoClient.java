@@ -14,6 +14,7 @@ public class EchoClient {
 
 	public static void main(String[] args) {
 		Socket socket = null;
+		Scanner scanner = null;
 		try {
 			// 1. 소켓 생성
 			socket = new Socket();
@@ -28,7 +29,7 @@ public class EchoClient {
 
 			while (true) {
 				// 4. 데이터 쓰기
-				Scanner scanner = new Scanner(System.in);
+				scanner = new Scanner(System.in);
 				System.out.print(">>");
 				String data = scanner.nextLine();
 				os.write(data.getBytes("utf-8"));
@@ -54,6 +55,10 @@ public class EchoClient {
 			e.printStackTrace();
 		} finally {
 			try {
+				if (scanner != null) {
+					scanner.close();
+				}
+
 				if (socket != null && socket.isClosed() == false) {
 					socket.close();
 				}

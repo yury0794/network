@@ -18,6 +18,9 @@ public class EchoServer {
 			// 1. 서버 소켓 생성
 			serverSocket = new ServerSocket();
 
+			// Time-Wait 상태에서 포트 재할당을 가능하게 하기 위해서
+			serverSocket.setReuseAddress(true);
+
 			// 2. 바인딩
 			InetAddress inetAddress = InetAddress.getLocalHost();
 			String serverAddress = inetAddress.getHostAddress();
@@ -39,20 +42,20 @@ public class EchoServer {
 				InputStream is = socket.getInputStream();
 				OutputStream os = socket.getOutputStream();
 
-				while(true){
-				// 6.데이터 읽기
-				byte[] buffer = new byte[256];
-				int readBytes = is.read(buffer); // blocked
-				if (readBytes <= -1) { // 클라이언트가 연결을 끊었다.(정상종료)
-					System.out.println("[EchoServer] closed by client");
-					break;
-				}
+				while (true) {
+					// 6.데이터 읽기
+					byte[] buffer = new byte[256];
+					int readBytes = is.read(buffer); // blocked
+					if (readBytes <= -1) { // 클라이언트가 연결을 끊었다.(정상종료)
+						System.out.println("[EchoServer] closed by client");
+						break;
+					}
 
-				String data = new String(buffer, 0, readBytes, "utf-8");
-				System.out.println("[server] received :" + data);
+					String data = new String(buffer, 0, readBytes, "utf-8");
+					System.out.println("[server] received :" + data);
 
-				// 7. 데이터 쓰기
-				os.write(data.getBytes("utf-8"));
+					// 7. 데이터 쓰기
+					os.write(data.getBytes("utf-8"));
 				}
 			} catch (SocketException e) {
 				System.out.println("[EchoServer] 비정상적으로 클라이언트가 연결을 끊었습니다.");
